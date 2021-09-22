@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="shortcut icon" href="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Rubik+Mono+One&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+    <title>NASA</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Source Code Pro", monospace;
+      }
+
+      body {
+        position: relative;
+        /* background-color: #fafafa; */
+        background: linear-gradient(90deg, #00c9ff 0%, #92fe9d 100%);
+      }
+      /* h1 {
+        font-family: "Rubik Mono One", sans-serif;
+        font-size: 72px;
+        background-image: linear-gradient(225deg, #ff3cac 0%, #784ba0 50%, #2b86c5 100%);
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      } */
+      h2 {
+        font-family: "Monoton", cursive;
+        /* font-family: "Rubik Mono One", sans-serif; */
+        font-size: 72px;
+        background-image: linear-gradient(225deg, #fd1058 0%, #bcbe27 50%, #093fd4 100%);
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .image-gallery {
+        width: 100%;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 50px 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-auto-rows: 250px;
+        grid-auto-flow: dense;
+        grid-gap: 20px;
+      }
+
+      .image-gallery .image-box {
+        position: relative;
+        /* background-color: #d7d7d8; */
+        background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+        overflow: hidden;
+      }
+
+      .image-gallery .image-box:nth-child(7n + 1) {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+
+      .image-gallery .image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.5s ease;
+      }
+
+      .image-gallery .image-box:hover img {
+        transform: scale(1.1);
+      }
+
+      .image-gallery .image-box .overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: linear-gradient(0deg, #d9afd9 0%, #97d9e1 100%);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.5s ease;
+        z-index: 1;
+      }
+
+      .image-gallery .image-box:hover .overlay {
+        top: 20px;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+        opacity: 1;
+      }
+
+      .image-gallery .image-box .details {
+        text-align: center;
+      }
+
+      .image-gallery .image-box .details .title {
+        margin-bottom: 8px;
+        font-size: 24px;
+        font-weight: 600;
+        position: relative;
+        top: -5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .image-gallery .image-box .details .category {
+        font-size: 18px;
+        font-weight: 400;
+        position: relative;
+        bottom: -5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .image-gallery .image-box:hover .details .title {
+        top: 0px;
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.3s 0.2s ease;
+      }
+
+      .image-gallery .image-box:hover .details .category {
+        bottom: 0;
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.3s 0.2s ease;
+      }
+
+      .image-gallery .image-box .details .title a,
+      .image-gallery .image-box .details .category a {
+        color: #222222;
+        text-decoration: none;
+      }
+    </style>
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body onload="bodyload()">
+    <nav class="navbar navbar-light bg-tranprant w-100">
+      <div class="container-fluid w-100">
+        <a class="navbar-brand d-flex flex-row align-items-center" href="#">
+          <img
+            src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
+            alt=""
+            width="100"
+            height="100"
+            class="d-inline-block align-text-top"
+          />
+          <h2 class="ms-5 fw-bold text-info">Mars Photos Gallery</h2>
+        </a>
+      </div>
+    </nav>
+    <div class="image-gallery container-fluid" id="box"></div>
+
+    <!-- Java Script -->
+    <script>
+      //function
+      function bodyload() {
+        //fetching Details from Nasa Api
+
+        fetch("https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=HqJyw9hK19nHWYuM2mUL31eZJITsaiSRcV2v9UIo")
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            for (var item of data.photos) {
+              var box = document.getElementById("box");
+              var divbx = document.createElement("div");
+              divbx.classList.add("image-box");
+
+              //   append Child
+
+              divbx.innerHTML = `
+                   <img src="${item.img_src}" alt="Mars" />
+                    <div class="overlay">
+                   <div class="details">
+                   <h3 class="title">
+                          <a href="#">${item.camera.full_name}</a>
+                    </h3>
+                         <table class="table">
+                    <tr>
+                    <td>Id</td>
+                    <th scope="row">${item.id}</th>
+                    </tr>
+                  <tr>
+                    <td>Date</td>
+                      <th scope="row">${item.earth_date}</th>
+                          </tr>
+                          <tr>
+                          <td>Rover</td>
+                          <th scope="row">${item.rover.name}</th>
+                          </tr>
+                           </table>
+                   </div>
+                     </div> `;
+
+              box.appendChild(divbx);
+            }
+          });
+      }
+    </script>
+  </body>
+</html>
